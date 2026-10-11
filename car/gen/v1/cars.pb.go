@@ -201,6 +201,86 @@ func (x *AddCarResponse) GetCar() *Car {
 	return nil
 }
 
+type ListCarsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListCarsRequest) Reset() {
+	*x = ListCarsRequest{}
+	mi := &file_v1_cars_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListCarsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListCarsRequest) ProtoMessage() {}
+
+func (x *ListCarsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_cars_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListCarsRequest.ProtoReflect.Descriptor instead.
+func (*ListCarsRequest) Descriptor() ([]byte, []int) {
+	return file_v1_cars_proto_rawDescGZIP(), []int{3}
+}
+
+type ListCarsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cars          []*Car                 `protobuf:"bytes,1,rep,name=cars,proto3" json:"cars,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListCarsResponse) Reset() {
+	*x = ListCarsResponse{}
+	mi := &file_v1_cars_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListCarsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListCarsResponse) ProtoMessage() {}
+
+func (x *ListCarsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_cars_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListCarsResponse.ProtoReflect.Descriptor instead.
+func (*ListCarsResponse) Descriptor() ([]byte, []int) {
+	return file_v1_cars_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ListCarsResponse) GetCars() []*Car {
+	if x != nil {
+		return x.Cars
+	}
+	return nil
+}
+
 var File_v1_cars_proto protoreflect.FileDescriptor
 
 const file_v1_cars_proto_rawDesc = "" +
@@ -217,10 +297,14 @@ const file_v1_cars_proto_rawDesc = "" +
 	"\x04year\x18\x04 \x01(\x05R\x04year\"I\n" +
 	"\x0eAddCarResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
-	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car2E\n" +
+	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"\x11\n" +
+	"\x0fListCarsRequest\"3\n" +
+	"\x10ListCarsResponse\x12\x1f\n" +
+	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\x84\x01\n" +
 	"\n" +
 	"CarService\x127\n" +
-	"\x06AddCar\x12\x15.car.v1.AddCarRequest\x1a\x16.car.v1.AddCarResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
+	"\x06AddCar\x12\x15.car.v1.AddCarRequest\x1a\x16.car.v1.AddCarResponse\x12=\n" +
+	"\bListCars\x12\x17.car.v1.ListCarsRequest\x1a\x18.car.v1.ListCarsResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
 
 var (
 	file_v1_cars_proto_rawDescOnce sync.Once
@@ -234,21 +318,26 @@ func file_v1_cars_proto_rawDescGZIP() []byte {
 	return file_v1_cars_proto_rawDescData
 }
 
-var file_v1_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_v1_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_v1_cars_proto_goTypes = []any{
-	(*AddCarRequest)(nil),  // 0: car.v1.AddCarRequest
-	(*Car)(nil),            // 1: car.v1.Car
-	(*AddCarResponse)(nil), // 2: car.v1.AddCarResponse
+	(*AddCarRequest)(nil),    // 0: car.v1.AddCarRequest
+	(*Car)(nil),              // 1: car.v1.Car
+	(*AddCarResponse)(nil),   // 2: car.v1.AddCarResponse
+	(*ListCarsRequest)(nil),  // 3: car.v1.ListCarsRequest
+	(*ListCarsResponse)(nil), // 4: car.v1.ListCarsResponse
 }
 var file_v1_cars_proto_depIdxs = []int32{
 	1, // 0: car.v1.AddCarResponse.car:type_name -> car.v1.Car
-	0, // 1: car.v1.CarService.AddCar:input_type -> car.v1.AddCarRequest
-	2, // 2: car.v1.CarService.AddCar:output_type -> car.v1.AddCarResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1, // 1: car.v1.ListCarsResponse.cars:type_name -> car.v1.Car
+	0, // 2: car.v1.CarService.AddCar:input_type -> car.v1.AddCarRequest
+	3, // 3: car.v1.CarService.ListCars:input_type -> car.v1.ListCarsRequest
+	2, // 4: car.v1.CarService.AddCar:output_type -> car.v1.AddCarResponse
+	4, // 5: car.v1.CarService.ListCars:output_type -> car.v1.ListCarsResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_v1_cars_proto_init() }
@@ -262,7 +351,7 @@ func file_v1_cars_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_cars_proto_rawDesc), len(file_v1_cars_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

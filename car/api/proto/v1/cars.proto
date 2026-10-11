@@ -6,6 +6,7 @@ option go_package = "car-dealership/car/gen/v1;carv1";
 
 service CarService {
   rpc AddCar(AddCarRequest) returns (AddCarResponse);
+  rpc ListCars(ListCarsRequest) returns (ListCarsResponse);
 }
 
 message AddCarRequest {
@@ -24,4 +25,10 @@ message Car {
 message AddCarResponse {
   string message = 1;
   Car car = 2;
+}
+
+message ListCarsRequest{}
+
+message ListCarsResponse {
+  repeated Car cars = 1;
 }

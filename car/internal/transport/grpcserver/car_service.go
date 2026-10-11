@@ -48,3 +48,25 @@ func (s *Server) AddCar(
 		},
 	}, nil
 }
+
+func (s *Server) ListCars(ctx context.Context, request *carv1.ListCarsRequest) (*carv1.ListCarsResponse, error) {
+	cars, err := s.application.ListCars(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert the list of cars to the protobuf representation
+	var carProtos []*carv1.Car
+	for _, car := range cars {
+		carProtos = append(carProtos, &carv1.Car{
+			Id:    car.ID.String(),
+			Brand: car.Brand,
+			Model: car.Model,
+			Year:  int32(car.Year),
+		})
+	}
+
+	return &carv1.ListCarsResponse{
+		Cars: carProtos,
+	}, nil
+}
