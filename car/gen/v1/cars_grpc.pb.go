@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.2
 // - protoc             v7.36.2
-// source: cars/cars.proto
+// source: v1/cars.proto
 
-package cars
+package carv1
 
 import (
 	context "context"
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CarService_AddCar_FullMethodName = "/cars.CarService/AddCar"
+	CarService_AddCar_FullMethodName = "/car.v1.CarService/AddCar"
 )
 
 // CarServiceClient is the client API for CarService service.
@@ -108,7 +108,7 @@ func _CarService_AddCar_Handler(srv interface{}, ctx context.Context, dec func(i
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CarService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "cars.CarService",
+	ServiceName: "car.v1.CarService",
 	HandlerType: (*CarServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -117,5 +117,5 @@ var CarService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "cars/cars.proto",
+	Metadata: "v1/cars.proto",
 }

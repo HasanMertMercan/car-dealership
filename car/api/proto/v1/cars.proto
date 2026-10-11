@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package cars;
+package car.v1;
 
-option go_package = "car-dealership/cars;cars";
+option go_package = "car-dealership/services/car/gen/v1;carv1";
 
 service CarService {
   rpc AddCar(CreateCar) returns (AddedMessage);
