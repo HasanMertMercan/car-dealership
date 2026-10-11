@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	carv1 "car-dealership/car/gen/v1"
+	carpb "car-dealership/car/gen"
 
 	"google.golang.org/grpc"
 
@@ -13,7 +13,7 @@ import (
 )
 
 type carServiceServer struct {
-	carv1.UnimplementedCarServiceServer
+	carpb.UnimplementedCarServiceServer
 	application *application.CarService
 }
 
@@ -34,7 +34,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	// Register the CarService server with the gRPC server
-	carv1.RegisterCarServiceServer(
+	carpb.RegisterCarServiceServer(
 		grpcServer,
 		carHandler,
 	)

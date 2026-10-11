@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	carv1 "car-dealership/car/gen/v1"
+	carpb "car-dealership/car/gen"
 	"car-dealership/car/internal/application"
 )
 
 type Server struct {
-	carv1.UnimplementedCarServiceServer
+	carpb.UnimplementedCarServiceServer
 	application *application.CarService
 }
 
@@ -21,8 +21,8 @@ func NewServer(application *application.CarService) *Server {
 
 func (s *Server) AddCar(
 	ctx context.Context,
-	request *carv1.AddCarRequest,
-) (*carv1.AddCarResponse, error) {
+	request *carpb.AddCarRequest,
+) (*carpb.AddCarResponse, error) {
 	car, err := s.application.AddCar(
 		ctx,
 		application.AddCarInput{
@@ -35,13 +35,13 @@ func (s *Server) AddCar(
 		return nil, err
 	}
 
-	return &carv1.AddCarResponse{
+	return &carpb.AddCarResponse{
 		Message: fmt.Sprintf(
 			"Car added: %s %s",
 			car.Brand,
 			car.Model,
 		),
-		Car: &carv1.Car{
+		Car: &carpb.Car{
 			Brand: car.Brand,
 			Model: car.Model,
 			Year:  int32(car.Year),
@@ -49,16 +49,16 @@ func (s *Server) AddCar(
 	}, nil
 }
 
-func (s *Server) ListCars(ctx context.Context, request *carv1.ListCarsRequest) (*carv1.ListCarsResponse, error) {
+func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (*carpb.ListCarsResponse, error) {
 	cars, err := s.application.ListCars(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	// Convert the list of cars to the protobuf representation
-	var carProtos []*carv1.Car
+	var carProtos []*carpb.Car
 	for _, car := range cars {
-		carProtos = append(carProtos, &carv1.Car{
+		carProtos = append(carProtos, &carpb.Car{
 			Id:    car.ID.String(),
 			Brand: car.Brand,
 			Model: car.Model,
@@ -66,7 +66,7 @@ func (s *Server) ListCars(ctx context.Context, request *carv1.ListCarsRequest) (
 		})
 	}
 
-	return &carv1.ListCarsResponse{
+	return &carpb.ListCarsResponse{
 		Cars: carProtos,
 	}, nil
 }
