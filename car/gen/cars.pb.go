@@ -21,29 +21,30 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type AddCarRequest struct {
+type UpsertCarRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Brand         string                 `protobuf:"bytes,1,opt,name=brand,proto3" json:"brand,omitempty"`
-	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
-	Year          int32                  `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Brand         string                 `protobuf:"bytes,2,opt,name=brand,proto3" json:"brand,omitempty"`
+	Model         string                 `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
+	Year          int32                  `protobuf:"varint,4,opt,name=year,proto3" json:"year,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AddCarRequest) Reset() {
-	*x = AddCarRequest{}
+func (x *UpsertCarRequest) Reset() {
+	*x = UpsertCarRequest{}
 	mi := &file_cars_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AddCarRequest) String() string {
+func (x *UpsertCarRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AddCarRequest) ProtoMessage() {}
+func (*UpsertCarRequest) ProtoMessage() {}
 
-func (x *AddCarRequest) ProtoReflect() protoreflect.Message {
+func (x *UpsertCarRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cars_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,26 +56,33 @@ func (x *AddCarRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AddCarRequest.ProtoReflect.Descriptor instead.
-func (*AddCarRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpsertCarRequest.ProtoReflect.Descriptor instead.
+func (*UpsertCarRequest) Descriptor() ([]byte, []int) {
 	return file_cars_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *AddCarRequest) GetBrand() string {
+func (x *UpsertCarRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpsertCarRequest) GetBrand() string {
 	if x != nil {
 		return x.Brand
 	}
 	return ""
 }
 
-func (x *AddCarRequest) GetModel() string {
+func (x *UpsertCarRequest) GetModel() string {
 	if x != nil {
 		return x.Model
 	}
 	return ""
 }
 
-func (x *AddCarRequest) GetYear() int32 {
+func (x *UpsertCarRequest) GetYear() int32 {
 	if x != nil {
 		return x.Year
 	}
@@ -149,7 +157,7 @@ func (x *Car) GetYear() int32 {
 	return 0
 }
 
-type AddCarResponse struct {
+type UpsertCarResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	Car           *Car                   `protobuf:"bytes,2,opt,name=car,proto3" json:"car,omitempty"`
@@ -157,20 +165,20 @@ type AddCarResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AddCarResponse) Reset() {
-	*x = AddCarResponse{}
+func (x *UpsertCarResponse) Reset() {
+	*x = UpsertCarResponse{}
 	mi := &file_cars_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AddCarResponse) String() string {
+func (x *UpsertCarResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AddCarResponse) ProtoMessage() {}
+func (*UpsertCarResponse) ProtoMessage() {}
 
-func (x *AddCarResponse) ProtoReflect() protoreflect.Message {
+func (x *UpsertCarResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cars_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -182,19 +190,19 @@ func (x *AddCarResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AddCarResponse.ProtoReflect.Descriptor instead.
-func (*AddCarResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpsertCarResponse.ProtoReflect.Descriptor instead.
+func (*UpsertCarResponse) Descriptor() ([]byte, []int) {
 	return file_cars_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *AddCarResponse) GetMessage() string {
+func (x *UpsertCarResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-func (x *AddCarResponse) GetCar() *Car {
+func (x *UpsertCarResponse) GetCar() *Car {
 	if x != nil {
 		return x.Car
 	}
@@ -286,25 +294,26 @@ var File_cars_proto protoreflect.FileDescriptor
 const file_cars_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"cars.proto\x12\x06car.v1\"O\n" +
-	"\rAddCarRequest\x12\x14\n" +
-	"\x05brand\x18\x01 \x01(\tR\x05brand\x12\x14\n" +
-	"\x05model\x18\x02 \x01(\tR\x05model\x12\x12\n" +
-	"\x04year\x18\x03 \x01(\x05R\x04year\"U\n" +
+	"cars.proto\x12\x06car.v1\"b\n" +
+	"\x10UpsertCarRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05brand\x18\x02 \x01(\tR\x05brand\x12\x14\n" +
+	"\x05model\x18\x03 \x01(\tR\x05model\x12\x12\n" +
+	"\x04year\x18\x04 \x01(\x05R\x04year\"U\n" +
 	"\x03Car\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05brand\x18\x02 \x01(\tR\x05brand\x12\x14\n" +
 	"\x05model\x18\x03 \x01(\tR\x05model\x12\x12\n" +
-	"\x04year\x18\x04 \x01(\x05R\x04year\"I\n" +
-	"\x0eAddCarResponse\x12\x18\n" +
+	"\x04year\x18\x04 \x01(\x05R\x04year\"L\n" +
+	"\x11UpsertCarResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
 	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"\x11\n" +
 	"\x0fListCarsRequest\"3\n" +
 	"\x10ListCarsResponse\x12\x1f\n" +
-	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\x84\x01\n" +
+	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\x8d\x01\n" +
 	"\n" +
-	"CarService\x127\n" +
-	"\x06AddCar\x12\x15.car.v1.AddCarRequest\x1a\x16.car.v1.AddCarResponse\x12=\n" +
+	"CarService\x12@\n" +
+	"\tUpsertCar\x12\x18.car.v1.UpsertCarRequest\x1a\x19.car.v1.UpsertCarResponse\x12=\n" +
 	"\bListCars\x12\x17.car.v1.ListCarsRequest\x1a\x18.car.v1.ListCarsResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
 
 var (
@@ -321,18 +330,18 @@ func file_cars_proto_rawDescGZIP() []byte {
 
 var file_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_cars_proto_goTypes = []any{
-	(*AddCarRequest)(nil),    // 0: car.v1.AddCarRequest
-	(*Car)(nil),              // 1: car.v1.Car
-	(*AddCarResponse)(nil),   // 2: car.v1.AddCarResponse
-	(*ListCarsRequest)(nil),  // 3: car.v1.ListCarsRequest
-	(*ListCarsResponse)(nil), // 4: car.v1.ListCarsResponse
+	(*UpsertCarRequest)(nil),  // 0: car.v1.UpsertCarRequest
+	(*Car)(nil),               // 1: car.v1.Car
+	(*UpsertCarResponse)(nil), // 2: car.v1.UpsertCarResponse
+	(*ListCarsRequest)(nil),   // 3: car.v1.ListCarsRequest
+	(*ListCarsResponse)(nil),  // 4: car.v1.ListCarsResponse
 }
 var file_cars_proto_depIdxs = []int32{
-	1, // 0: car.v1.AddCarResponse.car:type_name -> car.v1.Car
+	1, // 0: car.v1.UpsertCarResponse.car:type_name -> car.v1.Car
 	1, // 1: car.v1.ListCarsResponse.cars:type_name -> car.v1.Car
-	0, // 2: car.v1.CarService.AddCar:input_type -> car.v1.AddCarRequest
+	0, // 2: car.v1.CarService.UpsertCar:input_type -> car.v1.UpsertCarRequest
 	3, // 3: car.v1.CarService.ListCars:input_type -> car.v1.ListCarsRequest
-	2, // 4: car.v1.CarService.AddCar:output_type -> car.v1.AddCarResponse
+	2, // 4: car.v1.CarService.UpsertCar:output_type -> car.v1.UpsertCarResponse
 	4, // 5: car.v1.CarService.ListCars:output_type -> car.v1.ListCarsResponse
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type

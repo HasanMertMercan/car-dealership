@@ -5,14 +5,15 @@ package car.v1;
 option go_package = "car-dealership/car/gen/v1;carv1";
 
 service CarService {
-  rpc AddCar(AddCarRequest) returns (AddCarResponse);
+  rpc UpsertCar(UpsertCarRequest) returns (UpsertCarResponse);
   rpc ListCars(ListCarsRequest) returns (ListCarsResponse);
 }
 
-message AddCarRequest {
-  string brand = 1;
-  string model = 2;
-  int32 year = 3;
+message UpsertCarRequest {
+  string id = 1;
+  string brand = 2;
+  string model = 3;
+  int32 year = 4;
 }
 
 message Car {
@@ -22,7 +23,7 @@ message Car {
   int32 year = 4;
 }
 
-message AddCarResponse {
+message UpsertCarResponse {
   string message = 1;
   Car car = 2;
 }

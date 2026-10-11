@@ -3,6 +3,7 @@ package grpcserver
 import (
 	"context"
 	"fmt"
+	"uuid"
 
 	carpb "car-dealership/car/gen"
 	"car-dealership/car/internal/application"
@@ -19,13 +20,19 @@ func NewServer(application *application.CarService) *Server {
 	}
 }
 
-func (s *Server) AddCar(
+func (s *Server) UpsertCar(
 	ctx context.Context,
-	request *carpb.AddCarRequest,
-) (*carpb.AddCarResponse, error) {
-	car, err := s.application.AddCar(
+	request *carpb.UpsertCarRequest,
+) (*carpb.UpsertCarResponse, error) {
+	id, err := uuid.Parse(request.GetId())
+	if err != nil {
+		id = uuid.NewV4()
+	}
+
+	car, err := s.application.UpsertCar(
 		ctx,
-		application.AddCarInput{
+		application.UpsertCarInput{
+			ID:    id,
 			Brand: request.GetBrand(),
 			Model: request.GetModel(),
 			Year:  int(request.GetYear()),
@@ -35,7 +42,7 @@ func (s *Server) AddCar(
 		return nil, err
 	}
 
-	return &carpb.AddCarResponse{
+	return &carpb.UpsertCarResponse{
 		Message: fmt.Sprintf(
 			"Car added: %s %s",
 			car.Brand,

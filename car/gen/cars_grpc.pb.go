@@ -19,15 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CarService_AddCar_FullMethodName   = "/car.v1.CarService/AddCar"
-	CarService_ListCars_FullMethodName = "/car.v1.CarService/ListCars"
+	CarService_UpsertCar_FullMethodName = "/car.v1.CarService/UpsertCar"
+	CarService_ListCars_FullMethodName  = "/car.v1.CarService/ListCars"
 )
 
 // CarServiceClient is the client API for CarService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CarServiceClient interface {
-	AddCar(ctx context.Context, in *AddCarRequest, opts ...grpc.CallOption) (*AddCarResponse, error)
+	UpsertCar(ctx context.Context, in *UpsertCarRequest, opts ...grpc.CallOption) (*UpsertCarResponse, error)
 	ListCars(ctx context.Context, in *ListCarsRequest, opts ...grpc.CallOption) (*ListCarsResponse, error)
 }
 
@@ -39,10 +39,10 @@ func NewCarServiceClient(cc grpc.ClientConnInterface) CarServiceClient {
 	return &carServiceClient{cc}
 }
 
-func (c *carServiceClient) AddCar(ctx context.Context, in *AddCarRequest, opts ...grpc.CallOption) (*AddCarResponse, error) {
+func (c *carServiceClient) UpsertCar(ctx context.Context, in *UpsertCarRequest, opts ...grpc.CallOption) (*UpsertCarResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddCarResponse)
-	err := c.cc.Invoke(ctx, CarService_AddCar_FullMethodName, in, out, cOpts...)
+	out := new(UpsertCarResponse)
+	err := c.cc.Invoke(ctx, CarService_UpsertCar_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *carServiceClient) ListCars(ctx context.Context, in *ListCarsRequest, op
 // All implementations must embed UnimplementedCarServiceServer
 // for forward compatibility.
 type CarServiceServer interface {
-	AddCar(context.Context, *AddCarRequest) (*AddCarResponse, error)
+	UpsertCar(context.Context, *UpsertCarRequest) (*UpsertCarResponse, error)
 	ListCars(context.Context, *ListCarsRequest) (*ListCarsResponse, error)
 	mustEmbedUnimplementedCarServiceServer()
 }
@@ -75,8 +75,8 @@ type CarServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCarServiceServer struct{}
 
-func (UnimplementedCarServiceServer) AddCar(context.Context, *AddCarRequest) (*AddCarResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AddCar not implemented")
+func (UnimplementedCarServiceServer) UpsertCar(context.Context, *UpsertCarRequest) (*UpsertCarResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpsertCar not implemented")
 }
 func (UnimplementedCarServiceServer) ListCars(context.Context, *ListCarsRequest) (*ListCarsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCars not implemented")
@@ -102,20 +102,20 @@ func RegisterCarServiceServer(s grpc.ServiceRegistrar, srv CarServiceServer) {
 	s.RegisterService(&CarService_ServiceDesc, srv)
 }
 
-func _CarService_AddCar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddCarRequest)
+func _CarService_UpsertCar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertCarRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarServiceServer).AddCar(ctx, in)
+		return srv.(CarServiceServer).UpsertCar(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CarService_AddCar_FullMethodName,
+		FullMethod: CarService_UpsertCar_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarServiceServer).AddCar(ctx, req.(*AddCarRequest))
+		return srv.(CarServiceServer).UpsertCar(ctx, req.(*UpsertCarRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,8 +146,8 @@ var CarService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CarServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddCar",
-			Handler:    _CarService_AddCar_Handler,
+			MethodName: "UpsertCar",
+			Handler:    _CarService_UpsertCar_Handler,
 		},
 		{
 			MethodName: "ListCars",
