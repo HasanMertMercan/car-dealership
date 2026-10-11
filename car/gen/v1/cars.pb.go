@@ -21,28 +21,29 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type CreateCar struct {
+type AddCarRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Brand         string                 `protobuf:"bytes,1,opt,name=brand,proto3" json:"brand,omitempty"`
 	Model         string                 `protobuf:"bytes,2,opt,name=model,proto3" json:"model,omitempty"`
+	Year          int32                  `protobuf:"varint,3,opt,name=year,proto3" json:"year,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateCar) Reset() {
-	*x = CreateCar{}
+func (x *AddCarRequest) Reset() {
+	*x = AddCarRequest{}
 	mi := &file_v1_cars_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateCar) String() string {
+func (x *AddCarRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateCar) ProtoMessage() {}
+func (*AddCarRequest) ProtoMessage() {}
 
-func (x *CreateCar) ProtoReflect() protoreflect.Message {
+func (x *AddCarRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_cars_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,46 +55,56 @@ func (x *CreateCar) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateCar.ProtoReflect.Descriptor instead.
-func (*CreateCar) Descriptor() ([]byte, []int) {
+// Deprecated: Use AddCarRequest.ProtoReflect.Descriptor instead.
+func (*AddCarRequest) Descriptor() ([]byte, []int) {
 	return file_v1_cars_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateCar) GetBrand() string {
+func (x *AddCarRequest) GetBrand() string {
 	if x != nil {
 		return x.Brand
 	}
 	return ""
 }
 
-func (x *CreateCar) GetModel() string {
+func (x *AddCarRequest) GetModel() string {
 	if x != nil {
 		return x.Model
 	}
 	return ""
 }
 
-type AddedMessage struct {
+func (x *AddCarRequest) GetYear() int32 {
+	if x != nil {
+		return x.Year
+	}
+	return 0
+}
+
+type Car struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Brand         string                 `protobuf:"bytes,2,opt,name=brand,proto3" json:"brand,omitempty"`
+	Model         string                 `protobuf:"bytes,3,opt,name=model,proto3" json:"model,omitempty"`
+	Year          int32                  `protobuf:"varint,4,opt,name=year,proto3" json:"year,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AddedMessage) Reset() {
-	*x = AddedMessage{}
+func (x *Car) Reset() {
+	*x = Car{}
 	mi := &file_v1_cars_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AddedMessage) String() string {
+func (x *Car) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AddedMessage) ProtoMessage() {}
+func (*Car) ProtoMessage() {}
 
-func (x *AddedMessage) ProtoReflect() protoreflect.Message {
+func (x *Car) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_cars_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -105,31 +116,111 @@ func (x *AddedMessage) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AddedMessage.ProtoReflect.Descriptor instead.
-func (*AddedMessage) Descriptor() ([]byte, []int) {
+// Deprecated: Use Car.ProtoReflect.Descriptor instead.
+func (*Car) Descriptor() ([]byte, []int) {
 	return file_v1_cars_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AddedMessage) GetMessage() string {
+func (x *Car) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Car) GetBrand() string {
+	if x != nil {
+		return x.Brand
+	}
+	return ""
+}
+
+func (x *Car) GetModel() string {
+	if x != nil {
+		return x.Model
+	}
+	return ""
+}
+
+func (x *Car) GetYear() int32 {
+	if x != nil {
+		return x.Year
+	}
+	return 0
+}
+
+type AddCarResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Car           *Car                   `protobuf:"bytes,2,opt,name=car,proto3" json:"car,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddCarResponse) Reset() {
+	*x = AddCarResponse{}
+	mi := &file_v1_cars_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddCarResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddCarResponse) ProtoMessage() {}
+
+func (x *AddCarResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_cars_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddCarResponse.ProtoReflect.Descriptor instead.
+func (*AddCarResponse) Descriptor() ([]byte, []int) {
+	return file_v1_cars_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *AddCarResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
+func (x *AddCarResponse) GetCar() *Car {
+	if x != nil {
+		return x.Car
+	}
+	return nil
+}
+
 var File_v1_cars_proto protoreflect.FileDescriptor
 
 const file_v1_cars_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/cars.proto\x12\x06car.v1\"7\n" +
-	"\tCreateCar\x12\x14\n" +
+	"\rv1/cars.proto\x12\x06car.v1\"O\n" +
+	"\rAddCarRequest\x12\x14\n" +
 	"\x05brand\x18\x01 \x01(\tR\x05brand\x12\x14\n" +
-	"\x05model\x18\x02 \x01(\tR\x05model\"(\n" +
-	"\fAddedMessage\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2?\n" +
+	"\x05model\x18\x02 \x01(\tR\x05model\x12\x12\n" +
+	"\x04year\x18\x03 \x01(\x05R\x04year\"U\n" +
+	"\x03Car\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
+	"\x05brand\x18\x02 \x01(\tR\x05brand\x12\x14\n" +
+	"\x05model\x18\x03 \x01(\tR\x05model\x12\x12\n" +
+	"\x04year\x18\x04 \x01(\x05R\x04year\"I\n" +
+	"\x0eAddCarResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
+	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car2E\n" +
 	"\n" +
-	"CarService\x121\n" +
-	"\x06AddCar\x12\x11.car.v1.CreateCar\x1a\x14.car.v1.AddedMessageB*Z(car-dealership/services/car/gen/v1;carv1b\x06proto3"
+	"CarService\x127\n" +
+	"\x06AddCar\x12\x15.car.v1.AddCarRequest\x1a\x16.car.v1.AddCarResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
 
 var (
 	file_v1_cars_proto_rawDescOnce sync.Once
@@ -143,19 +234,21 @@ func file_v1_cars_proto_rawDescGZIP() []byte {
 	return file_v1_cars_proto_rawDescData
 }
 
-var file_v1_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_v1_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_v1_cars_proto_goTypes = []any{
-	(*CreateCar)(nil),    // 0: car.v1.CreateCar
-	(*AddedMessage)(nil), // 1: car.v1.AddedMessage
+	(*AddCarRequest)(nil),  // 0: car.v1.AddCarRequest
+	(*Car)(nil),            // 1: car.v1.Car
+	(*AddCarResponse)(nil), // 2: car.v1.AddCarResponse
 }
 var file_v1_cars_proto_depIdxs = []int32{
-	0, // 0: car.v1.CarService.AddCar:input_type -> car.v1.CreateCar
-	1, // 1: car.v1.CarService.AddCar:output_type -> car.v1.AddedMessage
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: car.v1.AddCarResponse.car:type_name -> car.v1.Car
+	0, // 1: car.v1.CarService.AddCar:input_type -> car.v1.AddCarRequest
+	2, // 2: car.v1.CarService.AddCar:output_type -> car.v1.AddCarResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_v1_cars_proto_init() }
@@ -169,7 +262,7 @@ func file_v1_cars_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_cars_proto_rawDesc), len(file_v1_cars_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

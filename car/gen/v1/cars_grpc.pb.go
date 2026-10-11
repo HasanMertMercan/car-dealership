@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CarServiceClient interface {
-	AddCar(ctx context.Context, in *CreateCar, opts ...grpc.CallOption) (*AddedMessage, error)
+	AddCar(ctx context.Context, in *AddCarRequest, opts ...grpc.CallOption) (*AddCarResponse, error)
 }
 
 type carServiceClient struct {
@@ -37,9 +37,9 @@ func NewCarServiceClient(cc grpc.ClientConnInterface) CarServiceClient {
 	return &carServiceClient{cc}
 }
 
-func (c *carServiceClient) AddCar(ctx context.Context, in *CreateCar, opts ...grpc.CallOption) (*AddedMessage, error) {
+func (c *carServiceClient) AddCar(ctx context.Context, in *AddCarRequest, opts ...grpc.CallOption) (*AddCarResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddedMessage)
+	out := new(AddCarResponse)
 	err := c.cc.Invoke(ctx, CarService_AddCar_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (c *carServiceClient) AddCar(ctx context.Context, in *CreateCar, opts ...gr
 // All implementations must embed UnimplementedCarServiceServer
 // for forward compatibility.
 type CarServiceServer interface {
-	AddCar(context.Context, *CreateCar) (*AddedMessage, error)
+	AddCar(context.Context, *AddCarRequest) (*AddCarResponse, error)
 	mustEmbedUnimplementedCarServiceServer()
 }
 
@@ -62,7 +62,7 @@ type CarServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCarServiceServer struct{}
 
-func (UnimplementedCarServiceServer) AddCar(context.Context, *CreateCar) (*AddedMessage, error) {
+func (UnimplementedCarServiceServer) AddCar(context.Context, *AddCarRequest) (*AddCarResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddCar not implemented")
 }
 func (UnimplementedCarServiceServer) mustEmbedUnimplementedCarServiceServer() {}
@@ -87,7 +87,7 @@ func RegisterCarServiceServer(s grpc.ServiceRegistrar, srv CarServiceServer) {
 }
 
 func _CarService_AddCar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateCar)
+	in := new(AddCarRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func _CarService_AddCar_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: CarService_AddCar_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarServiceServer).AddCar(ctx, req.(*CreateCar))
+		return srv.(CarServiceServer).AddCar(ctx, req.(*AddCarRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
