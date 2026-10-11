@@ -2,7 +2,7 @@ package application
 
 import (
 	"car-dealership/car/internal/model"
-	"car-dealership/car/internal/storage"
+	"car-dealership/car/internal/repository"
 	"context"
 	"errors"
 	"strings"
@@ -40,7 +40,7 @@ func (s *CarService) AddCar(ctx context.Context, input AddCarInput) (*model.Car,
 		Model: carModel,
 		Year:  input.Year,
 	}
-	err := storage.AddCar(car)
+	err := repository.AddCar(car)
 	if err != nil {
 		return nil, err
 	}
@@ -48,5 +48,5 @@ func (s *CarService) AddCar(ctx context.Context, input AddCarInput) (*model.Car,
 }
 
 func (s *CarService) ListCars(ctx context.Context) ([]model.Car, error) {
-	return storage.Cars, nil
+	return repository.ListCars(), nil
 }
