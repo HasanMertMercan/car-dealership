@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v7.36.2
-// source: v1/cars.proto
+// source: cars.proto
 
 package carv1
 
@@ -32,7 +32,7 @@ type AddCarRequest struct {
 
 func (x *AddCarRequest) Reset() {
 	*x = AddCarRequest{}
-	mi := &file_v1_cars_proto_msgTypes[0]
+	mi := &file_cars_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *AddCarRequest) String() string {
 func (*AddCarRequest) ProtoMessage() {}
 
 func (x *AddCarRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_cars_proto_msgTypes[0]
+	mi := &file_cars_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *AddCarRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddCarRequest.ProtoReflect.Descriptor instead.
 func (*AddCarRequest) Descriptor() ([]byte, []int) {
-	return file_v1_cars_proto_rawDescGZIP(), []int{0}
+	return file_cars_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *AddCarRequest) GetBrand() string {
@@ -93,7 +93,7 @@ type Car struct {
 
 func (x *Car) Reset() {
 	*x = Car{}
-	mi := &file_v1_cars_proto_msgTypes[1]
+	mi := &file_cars_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -105,7 +105,7 @@ func (x *Car) String() string {
 func (*Car) ProtoMessage() {}
 
 func (x *Car) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_cars_proto_msgTypes[1]
+	mi := &file_cars_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -118,7 +118,7 @@ func (x *Car) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Car.ProtoReflect.Descriptor instead.
 func (*Car) Descriptor() ([]byte, []int) {
-	return file_v1_cars_proto_rawDescGZIP(), []int{1}
+	return file_cars_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Car) GetId() string {
@@ -159,7 +159,7 @@ type AddCarResponse struct {
 
 func (x *AddCarResponse) Reset() {
 	*x = AddCarResponse{}
-	mi := &file_v1_cars_proto_msgTypes[2]
+	mi := &file_cars_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -171,7 +171,7 @@ func (x *AddCarResponse) String() string {
 func (*AddCarResponse) ProtoMessage() {}
 
 func (x *AddCarResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_cars_proto_msgTypes[2]
+	mi := &file_cars_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -184,7 +184,7 @@ func (x *AddCarResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddCarResponse.ProtoReflect.Descriptor instead.
 func (*AddCarResponse) Descriptor() ([]byte, []int) {
-	return file_v1_cars_proto_rawDescGZIP(), []int{2}
+	return file_cars_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AddCarResponse) GetMessage() string {
@@ -209,7 +209,7 @@ type ListCarsRequest struct {
 
 func (x *ListCarsRequest) Reset() {
 	*x = ListCarsRequest{}
-	mi := &file_v1_cars_proto_msgTypes[3]
+	mi := &file_cars_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -221,7 +221,7 @@ func (x *ListCarsRequest) String() string {
 func (*ListCarsRequest) ProtoMessage() {}
 
 func (x *ListCarsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_cars_proto_msgTypes[3]
+	mi := &file_cars_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -234,7 +234,7 @@ func (x *ListCarsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCarsRequest.ProtoReflect.Descriptor instead.
 func (*ListCarsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_cars_proto_rawDescGZIP(), []int{3}
+	return file_cars_proto_rawDescGZIP(), []int{3}
 }
 
 type ListCarsResponse struct {
@@ -246,7 +246,7 @@ type ListCarsResponse struct {
 
 func (x *ListCarsResponse) Reset() {
 	*x = ListCarsResponse{}
-	mi := &file_v1_cars_proto_msgTypes[4]
+	mi := &file_cars_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +258,7 @@ func (x *ListCarsResponse) String() string {
 func (*ListCarsResponse) ProtoMessage() {}
 
 func (x *ListCarsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_cars_proto_msgTypes[4]
+	mi := &file_cars_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +271,7 @@ func (x *ListCarsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCarsResponse.ProtoReflect.Descriptor instead.
 func (*ListCarsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_cars_proto_rawDescGZIP(), []int{4}
+	return file_cars_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListCarsResponse) GetCars() []*Car {
@@ -281,11 +281,12 @@ func (x *ListCarsResponse) GetCars() []*Car {
 	return nil
 }
 
-var File_v1_cars_proto protoreflect.FileDescriptor
+var File_cars_proto protoreflect.FileDescriptor
 
-const file_v1_cars_proto_rawDesc = "" +
+const file_cars_proto_rawDesc = "" +
 	"\n" +
-	"\rv1/cars.proto\x12\x06car.v1\"O\n" +
+	"\n" +
+	"cars.proto\x12\x06car.v1\"O\n" +
 	"\rAddCarRequest\x12\x14\n" +
 	"\x05brand\x18\x01 \x01(\tR\x05brand\x12\x14\n" +
 	"\x05model\x18\x02 \x01(\tR\x05model\x12\x12\n" +
@@ -307,26 +308,26 @@ const file_v1_cars_proto_rawDesc = "" +
 	"\bListCars\x12\x17.car.v1.ListCarsRequest\x1a\x18.car.v1.ListCarsResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
 
 var (
-	file_v1_cars_proto_rawDescOnce sync.Once
-	file_v1_cars_proto_rawDescData []byte
+	file_cars_proto_rawDescOnce sync.Once
+	file_cars_proto_rawDescData []byte
 )
 
-func file_v1_cars_proto_rawDescGZIP() []byte {
-	file_v1_cars_proto_rawDescOnce.Do(func() {
-		file_v1_cars_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_cars_proto_rawDesc), len(file_v1_cars_proto_rawDesc)))
+func file_cars_proto_rawDescGZIP() []byte {
+	file_cars_proto_rawDescOnce.Do(func() {
+		file_cars_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_cars_proto_rawDesc), len(file_cars_proto_rawDesc)))
 	})
-	return file_v1_cars_proto_rawDescData
+	return file_cars_proto_rawDescData
 }
 
-var file_v1_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_v1_cars_proto_goTypes = []any{
+var file_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_cars_proto_goTypes = []any{
 	(*AddCarRequest)(nil),    // 0: car.v1.AddCarRequest
 	(*Car)(nil),              // 1: car.v1.Car
 	(*AddCarResponse)(nil),   // 2: car.v1.AddCarResponse
 	(*ListCarsRequest)(nil),  // 3: car.v1.ListCarsRequest
 	(*ListCarsResponse)(nil), // 4: car.v1.ListCarsResponse
 }
-var file_v1_cars_proto_depIdxs = []int32{
+var file_cars_proto_depIdxs = []int32{
 	1, // 0: car.v1.AddCarResponse.car:type_name -> car.v1.Car
 	1, // 1: car.v1.ListCarsResponse.cars:type_name -> car.v1.Car
 	0, // 2: car.v1.CarService.AddCar:input_type -> car.v1.AddCarRequest
@@ -340,26 +341,26 @@ var file_v1_cars_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_v1_cars_proto_init() }
-func file_v1_cars_proto_init() {
-	if File_v1_cars_proto != nil {
+func init() { file_cars_proto_init() }
+func file_cars_proto_init() {
+	if File_cars_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_cars_proto_rawDesc), len(file_v1_cars_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cars_proto_rawDesc), len(file_cars_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_v1_cars_proto_goTypes,
-		DependencyIndexes: file_v1_cars_proto_depIdxs,
-		MessageInfos:      file_v1_cars_proto_msgTypes,
+		GoTypes:           file_cars_proto_goTypes,
+		DependencyIndexes: file_cars_proto_depIdxs,
+		MessageInfos:      file_cars_proto_msgTypes,
 	}.Build()
-	File_v1_cars_proto = out.File
-	file_v1_cars_proto_goTypes = nil
-	file_v1_cars_proto_depIdxs = nil
+	File_cars_proto = out.File
+	file_cars_proto_goTypes = nil
+	file_cars_proto_depIdxs = nil
 }
