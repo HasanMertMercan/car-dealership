@@ -7,6 +7,8 @@ import (
 
 	carpb "car-dealership/car/gen"
 	"car-dealership/car/internal/application"
+
+	"google.golang.org/grpc"
 )
 
 type Server struct {
@@ -76,4 +78,34 @@ func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (
 	return &carpb.ListCarsResponse{
 		Cars: carProtos,
 	}, nil
+}
+
+// This method streams updates to the list of cars to all subscribers in real-time.
+// It only returns error state, otherwise it keeps streaming updates indefinitely.
+func (s *Server) StreamCarListUpdates(request *carpb.StreamCarListUpdatesRequest, stream grpc.ServerStreamingServer[carpb.StreamCarListUpdatesResponse]) error {
+
+	// Subscribe to the application's list update channel.
+	appUpdates := s.application.ListUpdateChannel()
+	for { // Infinite loop to continuously stream updates
+		select {
+		case cars := <-appUpdates: // Receive the latest list of cars from the application's update channel
+			protoCars := make([]*carpb.Car, 0)
+			for _, car := range cars { // Convert each car to its protobuf representation
+				protoCar := &carpb.Car{
+					Id:    car.ID.String(),
+					Brand: car.Brand,
+					Model: car.Model,
+					Year:  int32(car.Year),
+				}
+				protoCars = append(protoCars, protoCar)
+			}
+			// Send the converted list of cars to the client via the stream
+			stream.Send(&carpb.StreamCarListUpdatesResponse{
+				Cars: protoCars,
+			})
+		// Continue to listen for further updates
+		case <-stream.Context().Done():
+			return stream.Context().Err()
+		}
+	}
 }

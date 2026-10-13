@@ -2,11 +2,12 @@ syntax = "proto3";
 
 package car.v1;
 
-option go_package = "car-dealership/car/gen/v1;carv1";
+option go_package = "car-dealership/car/gen;carpb";
 
 service CarService {
   rpc UpsertCar(UpsertCarRequest) returns (UpsertCarResponse);
   rpc ListCars(ListCarsRequest) returns (ListCarsResponse);
+  rpc StreamCarListUpdates(StreamCarListUpdatesRequest) returns (stream StreamCarListUpdatesResponse);
 }
 
 message UpsertCarRequest {
@@ -31,5 +32,11 @@ message UpsertCarResponse {
 message ListCarsRequest{}
 
 message ListCarsResponse {
+  repeated Car cars = 1;
+}
+
+message StreamCarListUpdatesRequest{}
+
+message StreamCarListUpdatesResponse{
   repeated Car cars = 1;
 }

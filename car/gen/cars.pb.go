@@ -4,7 +4,7 @@
 // 	protoc        v7.36.2
 // source: cars.proto
 
-package carv1
+package carpb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -289,6 +289,86 @@ func (x *ListCarsResponse) GetCars() []*Car {
 	return nil
 }
 
+type StreamCarListUpdatesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StreamCarListUpdatesRequest) Reset() {
+	*x = StreamCarListUpdatesRequest{}
+	mi := &file_cars_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StreamCarListUpdatesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamCarListUpdatesRequest) ProtoMessage() {}
+
+func (x *StreamCarListUpdatesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_cars_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamCarListUpdatesRequest.ProtoReflect.Descriptor instead.
+func (*StreamCarListUpdatesRequest) Descriptor() ([]byte, []int) {
+	return file_cars_proto_rawDescGZIP(), []int{5}
+}
+
+type StreamCarListUpdatesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cars          []*Car                 `protobuf:"bytes,1,rep,name=cars,proto3" json:"cars,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StreamCarListUpdatesResponse) Reset() {
+	*x = StreamCarListUpdatesResponse{}
+	mi := &file_cars_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StreamCarListUpdatesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamCarListUpdatesResponse) ProtoMessage() {}
+
+func (x *StreamCarListUpdatesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_cars_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamCarListUpdatesResponse.ProtoReflect.Descriptor instead.
+func (*StreamCarListUpdatesResponse) Descriptor() ([]byte, []int) {
+	return file_cars_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *StreamCarListUpdatesResponse) GetCars() []*Car {
+	if x != nil {
+		return x.Cars
+	}
+	return nil
+}
+
 var File_cars_proto protoreflect.FileDescriptor
 
 const file_cars_proto_rawDesc = "" +
@@ -310,11 +390,15 @@ const file_cars_proto_rawDesc = "" +
 	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"\x11\n" +
 	"\x0fListCarsRequest\"3\n" +
 	"\x10ListCarsResponse\x12\x1f\n" +
-	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\x8d\x01\n" +
+	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars\"\x1d\n" +
+	"\x1bStreamCarListUpdatesRequest\"?\n" +
+	"\x1cStreamCarListUpdatesResponse\x12\x1f\n" +
+	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\xf2\x01\n" +
 	"\n" +
 	"CarService\x12@\n" +
 	"\tUpsertCar\x12\x18.car.v1.UpsertCarRequest\x1a\x19.car.v1.UpsertCarResponse\x12=\n" +
-	"\bListCars\x12\x17.car.v1.ListCarsRequest\x1a\x18.car.v1.ListCarsResponseB!Z\x1fcar-dealership/car/gen/v1;carv1b\x06proto3"
+	"\bListCars\x12\x17.car.v1.ListCarsRequest\x1a\x18.car.v1.ListCarsResponse\x12c\n" +
+	"\x14StreamCarListUpdates\x12#.car.v1.StreamCarListUpdatesRequest\x1a$.car.v1.StreamCarListUpdatesResponse0\x01B\x1eZ\x1ccar-dealership/car/gen;carpbb\x06proto3"
 
 var (
 	file_cars_proto_rawDescOnce sync.Once
@@ -328,26 +412,31 @@ func file_cars_proto_rawDescGZIP() []byte {
 	return file_cars_proto_rawDescData
 }
 
-var file_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_cars_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_cars_proto_goTypes = []any{
-	(*UpsertCarRequest)(nil),  // 0: car.v1.UpsertCarRequest
-	(*Car)(nil),               // 1: car.v1.Car
-	(*UpsertCarResponse)(nil), // 2: car.v1.UpsertCarResponse
-	(*ListCarsRequest)(nil),   // 3: car.v1.ListCarsRequest
-	(*ListCarsResponse)(nil),  // 4: car.v1.ListCarsResponse
+	(*UpsertCarRequest)(nil),             // 0: car.v1.UpsertCarRequest
+	(*Car)(nil),                          // 1: car.v1.Car
+	(*UpsertCarResponse)(nil),            // 2: car.v1.UpsertCarResponse
+	(*ListCarsRequest)(nil),              // 3: car.v1.ListCarsRequest
+	(*ListCarsResponse)(nil),             // 4: car.v1.ListCarsResponse
+	(*StreamCarListUpdatesRequest)(nil),  // 5: car.v1.StreamCarListUpdatesRequest
+	(*StreamCarListUpdatesResponse)(nil), // 6: car.v1.StreamCarListUpdatesResponse
 }
 var file_cars_proto_depIdxs = []int32{
 	1, // 0: car.v1.UpsertCarResponse.car:type_name -> car.v1.Car
 	1, // 1: car.v1.ListCarsResponse.cars:type_name -> car.v1.Car
-	0, // 2: car.v1.CarService.UpsertCar:input_type -> car.v1.UpsertCarRequest
-	3, // 3: car.v1.CarService.ListCars:input_type -> car.v1.ListCarsRequest
-	2, // 4: car.v1.CarService.UpsertCar:output_type -> car.v1.UpsertCarResponse
-	4, // 5: car.v1.CarService.ListCars:output_type -> car.v1.ListCarsResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // 2: car.v1.StreamCarListUpdatesResponse.cars:type_name -> car.v1.Car
+	0, // 3: car.v1.CarService.UpsertCar:input_type -> car.v1.UpsertCarRequest
+	3, // 4: car.v1.CarService.ListCars:input_type -> car.v1.ListCarsRequest
+	5, // 5: car.v1.CarService.StreamCarListUpdates:input_type -> car.v1.StreamCarListUpdatesRequest
+	2, // 6: car.v1.CarService.UpsertCar:output_type -> car.v1.UpsertCarResponse
+	4, // 7: car.v1.CarService.ListCars:output_type -> car.v1.ListCarsResponse
+	6, // 8: car.v1.CarService.StreamCarListUpdates:output_type -> car.v1.StreamCarListUpdatesResponse
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_cars_proto_init() }
@@ -361,7 +450,7 @@ func file_cars_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_cars_proto_rawDesc), len(file_cars_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

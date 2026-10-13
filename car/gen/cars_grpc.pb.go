@@ -4,7 +4,7 @@
 // - protoc             v7.36.2
 // source: cars.proto
 
-package carv1
+package carpb
 
 import (
 	context "context"
@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CarService_UpsertCar_FullMethodName = "/car.v1.CarService/UpsertCar"
-	CarService_ListCars_FullMethodName  = "/car.v1.CarService/ListCars"
+	CarService_UpsertCar_FullMethodName            = "/car.v1.CarService/UpsertCar"
+	CarService_ListCars_FullMethodName             = "/car.v1.CarService/ListCars"
+	CarService_StreamCarListUpdates_FullMethodName = "/car.v1.CarService/StreamCarListUpdates"
 )
 
 // CarServiceClient is the client API for CarService service.
@@ -29,6 +30,7 @@ const (
 type CarServiceClient interface {
 	UpsertCar(ctx context.Context, in *UpsertCarRequest, opts ...grpc.CallOption) (*UpsertCarResponse, error)
 	ListCars(ctx context.Context, in *ListCarsRequest, opts ...grpc.CallOption) (*ListCarsResponse, error)
+	StreamCarListUpdates(ctx context.Context, in *StreamCarListUpdatesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamCarListUpdatesResponse], error)
 }
 
 type carServiceClient struct {
@@ -59,12 +61,32 @@ func (c *carServiceClient) ListCars(ctx context.Context, in *ListCarsRequest, op
 	return out, nil
 }
 
+func (c *carServiceClient) StreamCarListUpdates(ctx context.Context, in *StreamCarListUpdatesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamCarListUpdatesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &CarService_ServiceDesc.Streams[0], CarService_StreamCarListUpdates_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[StreamCarListUpdatesRequest, StreamCarListUpdatesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type CarService_StreamCarListUpdatesClient = grpc.ServerStreamingClient[StreamCarListUpdatesResponse]
+
 // CarServiceServer is the server API for CarService service.
 // All implementations must embed UnimplementedCarServiceServer
 // for forward compatibility.
 type CarServiceServer interface {
 	UpsertCar(context.Context, *UpsertCarRequest) (*UpsertCarResponse, error)
 	ListCars(context.Context, *ListCarsRequest) (*ListCarsResponse, error)
+	StreamCarListUpdates(*StreamCarListUpdatesRequest, grpc.ServerStreamingServer[StreamCarListUpdatesResponse]) error
 	mustEmbedUnimplementedCarServiceServer()
 }
 
@@ -80,6 +102,9 @@ func (UnimplementedCarServiceServer) UpsertCar(context.Context, *UpsertCarReques
 }
 func (UnimplementedCarServiceServer) ListCars(context.Context, *ListCarsRequest) (*ListCarsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCars not implemented")
+}
+func (UnimplementedCarServiceServer) StreamCarListUpdates(*StreamCarListUpdatesRequest, grpc.ServerStreamingServer[StreamCarListUpdatesResponse]) error {
+	return status.Error(codes.Unimplemented, "method StreamCarListUpdates not implemented")
 }
 func (UnimplementedCarServiceServer) mustEmbedUnimplementedCarServiceServer() {}
 func (UnimplementedCarServiceServer) testEmbeddedByValue()                    {}
@@ -138,6 +163,17 @@ func _CarService_ListCars_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CarService_StreamCarListUpdates_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamCarListUpdatesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(CarServiceServer).StreamCarListUpdates(m, &grpc.GenericServerStream[StreamCarListUpdatesRequest, StreamCarListUpdatesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type CarService_StreamCarListUpdatesServer = grpc.ServerStreamingServer[StreamCarListUpdatesResponse]
+
 // CarService_ServiceDesc is the grpc.ServiceDesc for CarService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -154,6 +190,12 @@ var CarService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CarService_ListCars_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamCarListUpdates",
+			Handler:       _CarService_StreamCarListUpdates_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "cars.proto",
 }

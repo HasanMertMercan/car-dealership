@@ -16,11 +16,15 @@ type UpsertCarInput struct {
 	Year  int
 }
 
+// CarService provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
 type CarService struct {
+	listUpdate chan []model.Car // Channel to stream real-time latest state of the car list
 }
 
 func NewCarService() *CarService {
-	return &CarService{}
+	return &CarService{
+		listUpdate: make(chan []model.Car, 1),
+	}
 }
 
 func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*model.Car, error) {
@@ -50,9 +54,21 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 	if err != nil {
 		return nil, err
 	}
+
+	// Publish the latest list of cars to the update channel
+	select {
+	case s.listUpdate <- repository.ListCars():
+	default:
+	}
+
 	return &car, nil
 }
 
 func (s *CarService) ListCars(ctx context.Context) ([]model.Car, error) {
 	return repository.ListCars(), nil
+}
+
+// ListUpdateChannel returns a channel that streams updates to the list of cars in real-time.
+func (s *CarService) ListUpdateChannel() <-chan []model.Car {
+	return s.listUpdate
 }
