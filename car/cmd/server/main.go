@@ -26,8 +26,10 @@ func main() {
 	}
 	fmt.Println("gRPC server listening on :50051")
 
-	// Initialize the application and gRPC server handler
+	// Initialize the application
 	carApplication := application.NewCarService()
+
+	// Initialize the gRPC server handler with the application instance
 	carHandler := grpcserver.NewServer(carApplication)
 
 	// Create a new gRPC server
