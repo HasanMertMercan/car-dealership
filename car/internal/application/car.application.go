@@ -1,8 +1,8 @@
 package application
 
 import (
-	"car-dealership/car/internal/model"
-	"car-dealership/car/internal/repository"
+	"car-dealership/car/internal/application/model"
+	"car-dealership/car/internal/application/repository"
 	"context"
 	"errors"
 	"strings"
