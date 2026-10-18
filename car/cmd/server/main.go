@@ -20,14 +20,11 @@ type carServiceServer struct {
 }
 
 func main() {
-	// Initialize the application
+	// 1. Initialize the application
 	carApplication := application.NewCarService()
 
-	// Initialize the gRPC server handler with the application instance
+	// 2.a. Initialize the gRPC server handler with the application instance
 	carGRPCHandler := grpcserver.NewServer(carApplication)
-
-	// Initialize the REST server handler with the application instance
-	carRESTHandler := restserver.NewHandler(carApplication)
 
 	// Create a new gRPC server
 	grpcServer := grpc.NewServer()
@@ -37,6 +34,9 @@ func main() {
 		grpcServer,
 		carGRPCHandler,
 	)
+
+	// 2.b. Initialize the REST server handler with the application instance
+	carRESTHandler := restserver.NewHandler(carApplication)
 
 	// Register REST routes with the HTTP server mux
 	mux := http.NewServeMux()
@@ -49,7 +49,7 @@ func main() {
 	}
 	fmt.Println("HTTP server for REST API listening on :8080")
 
-	// Start the HTTP server for the REST API in a separate goroutine to allow the gRPC server to run concurrently
+	// 3.a. Start the HTTP server for the REST API in a separate goroutine to allow the gRPC server to run concurrently
 	go func() {
 		if err := httpServer.ListenAndServe(); err != nil {
 			// Handle the error.
@@ -65,7 +65,7 @@ func main() {
 	}
 	fmt.Println("gRPC server for GRPC API listening on :50051")
 
-	// Start serving requests on the listener
+	// 3.b. Start serving requests on the listener
 	if err := grpcServer.Serve(listener); err != nil {
 		fmt.Printf("failed to serve: %v\n", err)
 	}
