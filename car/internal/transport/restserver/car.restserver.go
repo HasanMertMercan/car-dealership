@@ -9,21 +9,26 @@ import (
 	"uuid"
 )
 
+// Handler is the HTTP handler for the car REST API. It wraps the application layer.
 type Handler struct {
 	application *application.CarService
 }
 
+// NewHandler creates a new instance of the car REST API handler with the given application layer.
 func NewHandler(application *application.CarService) *Handler {
 	return &Handler{
 		application: application,
 	}
 }
 
+// RegisterRoutes registers the HTTP routes for the car REST API with the given HTTP server mux.
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/cars", h.UpsertCar)
 	mux.HandleFunc("PUT /v1/cars/{id}", h.UpsertCar)
+	mux.HandleFunc("GET /v1/cars", h.ListCars)
 }
 
+// upsertCarRequest represents the request payload for upserting a car.
 type upsertCarRequest struct {
 	ID    string `json:"id,omitempty"`
 	Brand string `json:"brand"`
@@ -31,12 +36,13 @@ type upsertCarRequest struct {
 	Year  int    `json:"year"`
 }
 
+// upsertCarResponse represents the response payload for upserting a car.
 type upsertCarResponse struct {
 	Message string    `json:"message"`
 	Car     model.Car `json:"car"`
 }
 
-// UpsertCar handles HTTP requests to upsert a car. (path: /cars or /cars/{id}, method: POST or PUT)
+// UpsertCar handles HTTP requests to upsert a car. (path: /v1/cars or /v1/cars/{id}, method: POST or PUT)
 func (h *Handler) UpsertCar(w http.ResponseWriter, r *http.Request) {
 	var reqBody upsertCarRequest
 	err := json.NewDecoder(r.Body).Decode(&reqBody)
@@ -83,4 +89,16 @@ func (h *Handler) UpsertCar(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(respBody)
+}
+
+func (h *Handler) ListCars(w http.ResponseWriter, r *http.Request) {
+	cars, err := h.application.ListCars(r.Context())
+	if err != nil {
+		http.Error(w, "failed to list cars", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(cars)
 }
