@@ -46,9 +46,14 @@ func (h *Handler) UpsertCar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	idValue := r.PathValue("id")
+	if idValue == "" {
+		idValue = reqBody.ID
+	}
+
 	id := uuid.NewV4()
-	if reqBody.ID != "" {
-		parsedID, err := uuid.Parse(reqBody.ID)
+	if idValue != "" {
+		parsedID, err := uuid.Parse(idValue)
 		if err != nil {
 			http.Error(w, "invalid car ID", http.StatusBadRequest)
 			return
