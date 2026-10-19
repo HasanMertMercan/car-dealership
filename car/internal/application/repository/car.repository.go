@@ -3,33 +3,43 @@ package repository
 import (
 	"car-dealership/car/internal/application/model"
 	"context"
+	"errors"
+	"fmt"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/nullism/bqb"
 )
 
-type InMemoryCarRepository struct {
-	cars []model.Car
+type PostgresCarRepository struct {
+	connectionPool *pgxpool.Pool
 }
 
-func NewCarRepository() *InMemoryCarRepository {
-	return &InMemoryCarRepository{
-		cars: make([]model.Car, 0),
+func NewCarRepository(connectionPool *pgxpool.Pool) *PostgresCarRepository {
+	return &PostgresCarRepository{
+		connectionPool: connectionPool,
 	}
 }
 
-func (r *InMemoryCarRepository) UpsertCar(ctx context.Context, car model.Car) error {
-
-	// Check if the car already exists in the storage by ID and update it if found
-	for i, existingCar := range r.cars {
-		if existingCar.ID == car.ID {
-			r.cars[i] = car
-			return nil
-		}
+func (r *PostgresCarRepository) UpsertCar(ctx context.Context, car model.Car) error {
+	query := bqb.New(`
+		INSERT INTO car (id, brand, model, year) 
+		VALUES ($1, $2, $3, $4) 
+		ON CONFLICT (id) DO UPDATE SET 
+		brand = EXCLUDED.brand, 
+		model = EXCLUDED.model, 
+		year = EXCLUDED.year`)
+	q, _, err := query.ToPgsql()
+	if err != nil {
+		return fmt.Errorf("failed to convert query to pgsql: %w", err)
 	}
-
-	// If the car was not found in the existing storage, append the new car to the in-memory storage
-	r.cars = append(r.cars, car)
+	_, err = r.connectionPool.Exec(ctx, q, car.ID, car.Brand, car.Model, car.Year)
+	if err != nil {
+		return fmt.Errorf("failed to upsert car: %w", err)
+	}
 	return nil
 }
 
-func (r *InMemoryCarRepository) ListCars(ctx context.Context) ([]model.Car, error) {
-	return r.cars, nil
+func (r *PostgresCarRepository) ListCars(ctx context.Context) ([]model.Car, error) {
+	fmt.Println("LIST CARS REPOSITORY FUNC IS REACHED")
+	return nil, errors.New("Not Implemented")
 }
