@@ -6,30 +6,30 @@ import (
 )
 
 type InMemoryCarRepository struct {
-	Cars []model.Car
+	cars []model.Car
 }
 
 func NewCarRepository() *InMemoryCarRepository {
 	return &InMemoryCarRepository{
-		Cars: make([]model.Car, 0),
+		cars: make([]model.Car, 0),
 	}
 }
 
 func (r *InMemoryCarRepository) UpsertCar(ctx context.Context, car model.Car) error {
 
 	// Check if the car already exists in the storage by ID and update it if found
-	for i, existingCar := range r.Cars {
+	for i, existingCar := range r.cars {
 		if existingCar.ID == car.ID {
-			r.Cars[i] = car
+			r.cars[i] = car
 			return nil
 		}
 	}
 
 	// If the car was not found in the existing storage, append the new car to the in-memory storage
-	r.Cars = append(r.Cars, car)
+	r.cars = append(r.cars, car)
 	return nil
 }
 
 func (r *InMemoryCarRepository) ListCars(ctx context.Context) ([]model.Car, error) {
-	return r.Cars, nil
+	return r.cars, nil
 }
