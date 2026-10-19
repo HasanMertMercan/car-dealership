@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc"
 
 	"car-dealership/car/internal/application"
+	"car-dealership/car/internal/application/repository"
 	"car-dealership/car/internal/transport/grpcserver"
 	"car-dealership/car/internal/transport/restserver"
 )
@@ -21,7 +22,8 @@ type carServiceServer struct {
 
 func main() {
 	// 1. Initialize the application
-	carApplication := application.NewCarService()
+	carRepository := repository.NewCarRepository()
+	carApplication := application.NewCarService(carRepository)
 
 	// 2.a. Initialize the gRPC server handler with the application instance
 	carGRPCHandler := grpcserver.NewServer(carApplication)

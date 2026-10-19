@@ -2,12 +2,18 @@ package application
 
 import (
 	"car-dealership/car/internal/application/model"
-	"car-dealership/car/internal/application/repository"
 	"context"
 	"errors"
 	"strings"
 	"uuid"
 )
+
+// CarRepository defines the interface for car data storage operations.
+// It is defined within the application layer since this is the Go idiomatic way to define interfaces close to where they are used.
+type CarRepository interface {
+	UpsertCar(ctx context.Context, car model.Car) error
+	ListCars(ctx context.Context) ([]model.Car, error)
+}
 
 type UpsertCarInput struct {
 	ID    uuid.UUID
@@ -19,13 +25,13 @@ type UpsertCarInput struct {
 // CarService provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
 type CarService struct {
 	listUpdate chan []model.Car // Channel to stream real-time latest state of the car list
-	repository *repository.CarRepository
+	repository CarRepository
 }
 
-func NewCarService() *CarService {
+func NewCarService(repository CarRepository) *CarService {
 	return &CarService{
 		listUpdate: make(chan []model.Car, 1),
-		repository: repository.NewCarRepository(),
+		repository: repository,
 	}
 }
 
@@ -52,14 +58,19 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 		Model: carModel,
 		Year:  input.Year,
 	}
-	err := s.repository.UpsertCar(car)
+	err := s.repository.UpsertCar(ctx, car)
+	if err != nil {
+		return nil, err
+	}
+
+	latestCars, err := s.repository.ListCars(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	// Publish the latest list of cars to the update channel
 	select {
-	case s.listUpdate <- s.repository.ListCars():
+	case s.listUpdate <- latestCars:
 	default:
 	}
 
@@ -67,7 +78,11 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 }
 
 func (s *CarService) ListCars(ctx context.Context) ([]model.Car, error) {
-	return s.repository.ListCars(), nil
+	latestCars, err := s.repository.ListCars(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return latestCars, nil
 }
 
 // ListUpdateChannel returns a channel that streams updates to the list of cars in real-time.
