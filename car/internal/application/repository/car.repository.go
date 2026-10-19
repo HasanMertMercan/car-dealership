@@ -4,21 +4,31 @@ import (
 	"car-dealership/car/internal/application/model"
 )
 
-func UpsertCar(car model.Car) error {
+type CarRepository struct {
+	Cars []model.Car
+}
+
+func NewCarRepository() *CarRepository {
+	return &CarRepository{
+		Cars: TempCarStorage,
+	}
+}
+
+func (r *CarRepository) UpsertCar(car model.Car) error {
 
 	// Check if the car already exists in the storage by ID and update it if found
-	for i, existingCar := range Cars {
+	for i, existingCar := range TempCarStorage {
 		if existingCar.ID == car.ID {
-			Cars[i] = car
+			TempCarStorage[i] = car
 			return nil
 		}
 	}
 
 	// If the car was not found in the existing storage, append the new car to the in-memory storage
-	Cars = append(Cars, car)
+	TempCarStorage = append(TempCarStorage, car)
 	return nil
 }
 
-func ListCars() []model.Car {
-	return Cars
+func (r *CarRepository) ListCars() []model.Car {
+	return TempCarStorage
 }
