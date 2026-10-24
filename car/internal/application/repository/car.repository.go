@@ -3,7 +3,6 @@ package repository
 import (
 	"car-dealership/car/internal/application/model"
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -28,18 +27,57 @@ func (r *PostgresCarRepository) UpsertCar(ctx context.Context, car model.Car) er
 		brand = EXCLUDED.brand, 
 		model = EXCLUDED.model, 
 		year = EXCLUDED.year`)
-	q, _, err := query.ToPgsql()
+	q, params, err := query.ToPgsql()
 	if err != nil {
 		return fmt.Errorf("failed to convert query to pgsql: %w", err)
 	}
-	_, err = r.connectionPool.Exec(ctx, q, car.ID, car.Brand, car.Model, car.Year)
+	_, err = r.connectionPool.Exec(ctx, q, params...)
 	if err != nil {
 		return fmt.Errorf("failed to upsert car: %w", err)
 	}
 	return nil
 }
 
-func (r *PostgresCarRepository) ListCars(ctx context.Context) ([]model.Car, error) {
-	fmt.Println("LIST CARS REPOSITORY FUNC IS REACHED")
-	return nil, errors.New("Not Implemented")
+func (r *PostgresCarRepository) ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+	where := bqb.Optional("WHERE")
+	if filter != nil {
+		if filter.Search != nil {
+			where = where.And("(brand ILIKE ? OR model ILIKE ?)", "%"+*filter.Search+"%", "%"+*filter.Search+"%")
+		}
+		if filter.Year != nil {
+			where = where.And("year = ?", *filter.Year)
+		}
+	}
+
+	query := bqb.New(`
+		SELECT id, brand, model, year
+		FROM car
+		?
+	`, where)
+
+	queryString, params, err := query.ToPgsql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert query to pgsql: %w", err)
+	}
+
+	rows, err := r.connectionPool.Query(ctx, queryString, params...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	cars := make([]model.Car, 0)
+	for rows.Next() {
+		var car model.Car
+		err := rows.Scan(&car.ID, &car.Brand, &car.Model, &car.Year)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		cars = append(cars, car)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
+	return cars, nil
 }

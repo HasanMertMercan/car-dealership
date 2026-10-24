@@ -59,7 +59,7 @@ func (s *Server) UpsertCar(
 }
 
 func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (*carpb.ListCarsResponse, error) {
-	cars, err := s.application.ListCars(ctx)
+	cars, err := s.application.ListCars(ctx, nil) // Temporary: Update proto file and grpc endpoint to handle filters
 	if err != nil {
 		return nil, err
 	}

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"uuid"
 )
 
@@ -92,8 +93,25 @@ func (h *Handler) UpsertCar(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ListCars(w http.ResponseWriter, r *http.Request) {
-	cars, err := h.application.ListCars(r.Context())
+	queryParams := r.URL.Query()
+	searchParam := queryParams.Get("search")
+	yearParam := queryParams.Get("year")
+	filter := &model.CarFilter{}
+	if searchParam != "" {
+		filter.Search = &searchParam
+	}
+	if yearParam != "" {
+		year, err := strconv.Atoi(yearParam)
+		if err == nil {
+			filter.Year = &year
+		} else {
+			fmt.Printf("invalid year parameter: %v\n", err)
+		}
+	}
+
+	cars, err := h.application.ListCars(r.Context(), filter)
 	if err != nil {
+		fmt.Printf("failed to list cars: %v\n", err)
 		http.Error(w, "failed to list cars", http.StatusInternalServerError)
 		return
 	}

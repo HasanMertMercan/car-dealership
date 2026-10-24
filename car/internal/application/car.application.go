@@ -12,14 +12,7 @@ import (
 // It is defined within the application layer since this is the Go idiomatic way to define interfaces close to where they are used.
 type CarRepository interface {
 	UpsertCar(ctx context.Context, car model.Car) error
-	ListCars(ctx context.Context) ([]model.Car, error)
-}
-
-type UpsertCarInput struct {
-	ID    uuid.UUID
-	Brand string
-	Model string
-	Year  int
+	ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error)
 }
 
 // CarService provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
@@ -33,6 +26,13 @@ func NewCarService(repository CarRepository) *CarService {
 		listUpdate: make(chan []model.Car, 1),
 		repository: repository,
 	}
+}
+
+type UpsertCarInput struct {
+	ID    uuid.UUID
+	Brand string
+	Model string
+	Year  int
 }
 
 func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*model.Car, error) {
@@ -63,7 +63,7 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 		return nil, err
 	}
 
-	latestCars, err := s.repository.ListCars(ctx)
+	latestCars, err := s.repository.ListCars(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +77,8 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 	return &car, nil
 }
 
-func (s *CarService) ListCars(ctx context.Context) ([]model.Car, error) {
-	latestCars, err := s.repository.ListCars(ctx)
+func (s *CarService) ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+	latestCars, err := s.repository.ListCars(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

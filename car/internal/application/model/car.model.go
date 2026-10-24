@@ -8,3 +8,8 @@ type Car struct {
 	Model string
 	Year  int
 }
+
+type CarFilter struct {
+	Search *string `json:"search"`
+	Year   *int    `json:"year"`
+}
