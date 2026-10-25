@@ -7,8 +7,11 @@ import (
 
 	carpb "car-dealership/car/gen"
 	"car-dealership/car/internal/application"
+	"car-dealership/car/internal/application/model"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Server struct {
@@ -26,8 +29,12 @@ func (s *Server) UpsertCar(
 	ctx context.Context,
 	request *carpb.UpsertCarRequest,
 ) (*carpb.UpsertCarResponse, error) {
-	id, err := uuid.Parse(request.GetId())
-	if err != nil {
+	pathID := request.GetId()
+	id, err := uuid.Parse(pathID)
+	if err != nil && pathID != "" {
+		return nil, status.Error(codes.InvalidArgument, "invalid UUID")
+	}
+	if pathID == "" {
 		id = uuid.NewV4()
 	}
 
@@ -51,6 +58,7 @@ func (s *Server) UpsertCar(
 			car.Model,
 		),
 		Car: &carpb.Car{
+			Id:    car.ID.String(),
 			Brand: car.Brand,
 			Model: car.Model,
 			Year:  int32(car.Year),
@@ -59,7 +67,15 @@ func (s *Server) UpsertCar(
 }
 
 func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (*carpb.ListCarsResponse, error) {
-	cars, err := s.application.ListCars(ctx, nil) // Temporary: Update proto file and grpc endpoint to handle filters
+	filter := &model.CarFilter{}
+	if request.Search != nil {
+		filter.Search = request.Search
+	}
+	if request.Year != nil {
+		year := int(request.GetYear())
+		filter.Year = &year
+	}
+	cars, err := s.application.ListCars(ctx, filter)
 	if err != nil {
 		return nil, err
 	}

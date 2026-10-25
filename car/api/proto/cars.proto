@@ -29,7 +29,10 @@ message UpsertCarResponse {
   Car car = 2;
 }
 
-message ListCarsRequest{}
+message ListCarsRequest{
+  optional string search = 1;
+  optional int32 year = 2;
+}
 
 message ListCarsResponse {
   repeated Car cars = 1;

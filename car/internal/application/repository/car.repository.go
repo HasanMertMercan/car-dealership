@@ -22,11 +22,11 @@ func NewCarRepository(connectionPool *pgxpool.Pool) *PostgresCarRepository {
 func (r *PostgresCarRepository) UpsertCar(ctx context.Context, car model.Car) error {
 	query := bqb.New(`
 		INSERT INTO car (id, brand, model, year) 
-		VALUES ($1, $2, $3, $4) 
+		VALUES (?, ?, ?, ?) 
 		ON CONFLICT (id) DO UPDATE SET 
 		brand = EXCLUDED.brand, 
 		model = EXCLUDED.model, 
-		year = EXCLUDED.year`)
+		year = EXCLUDED.year`, car.ID, car.Brand, car.Model, car.Year)
 	q, params, err := query.ToPgsql()
 	if err != nil {
 		return fmt.Errorf("failed to convert query to pgsql: %w", err)

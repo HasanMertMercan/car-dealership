@@ -211,6 +211,8 @@ func (x *UpsertCarResponse) GetCar() *Car {
 
 type ListCarsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Search        *string                `protobuf:"bytes,1,opt,name=search,proto3,oneof" json:"search,omitempty"`
+	Year          *int32                 `protobuf:"varint,2,opt,name=year,proto3,oneof" json:"year,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -243,6 +245,20 @@ func (x *ListCarsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListCarsRequest.ProtoReflect.Descriptor instead.
 func (*ListCarsRequest) Descriptor() ([]byte, []int) {
 	return file_cars_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListCarsRequest) GetSearch() string {
+	if x != nil && x.Search != nil {
+		return *x.Search
+	}
+	return ""
+}
+
+func (x *ListCarsRequest) GetYear() int32 {
+	if x != nil && x.Year != nil {
+		return *x.Year
+	}
+	return 0
 }
 
 type ListCarsResponse struct {
@@ -387,8 +403,12 @@ const file_cars_proto_rawDesc = "" +
 	"\x04year\x18\x04 \x01(\x05R\x04year\"L\n" +
 	"\x11UpsertCarResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
-	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"\x11\n" +
-	"\x0fListCarsRequest\"3\n" +
+	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"[\n" +
+	"\x0fListCarsRequest\x12\x1b\n" +
+	"\x06search\x18\x01 \x01(\tH\x00R\x06search\x88\x01\x01\x12\x17\n" +
+	"\x04year\x18\x02 \x01(\x05H\x01R\x04year\x88\x01\x01B\t\n" +
+	"\a_searchB\a\n" +
+	"\x05_year\"3\n" +
 	"\x10ListCarsResponse\x12\x1f\n" +
 	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars\"\x1d\n" +
 	"\x1bStreamCarListUpdatesRequest\"?\n" +
@@ -444,6 +464,7 @@ func file_cars_proto_init() {
 	if File_cars_proto != nil {
 		return
 	}
+	file_cars_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -57,7 +57,12 @@ func main() {
 	carGRPCHandler := grpcserver.NewServer(carApplication)
 
 	// Create a new gRPC server
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor( // Chain multiple unary interceptors for gRPC requests
+			grpcserver.LoggingInterceptor,
+			grpcserver.InvalidUUIDInterceptor,
+		), // Add logging and UUID validation interceptors for gRPC requests (implemented in interceptors.go)
+	)
 
 	// Register the CarService server with the gRPC server
 	carpb.RegisterCarServiceServer(
