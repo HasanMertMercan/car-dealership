@@ -38,7 +38,7 @@ func (r *PostgresCarRepository) UpsertCar(ctx context.Context, car model.Car) er
 	return nil
 }
 
-func (r *PostgresCarRepository) ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+func (r *PostgresCarRepository) ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
 	where := bqb.Optional("WHERE")
 	if filter != nil {
 		if filter.Search != nil {
@@ -49,11 +49,17 @@ func (r *PostgresCarRepository) ListCars(ctx context.Context, filter *model.CarF
 		}
 	}
 
+	where = where.And("id > ?", pagination.PageToken)
+	orderBy := bqb.Optional("ORDER BY").Comma("id " + string(model.SortDirectionAsc)) // Default sort by ID ascending
+	limit := bqb.Optional("LIMIT").And("?", pagination.PageSize)
+
 	query := bqb.New(`
 		SELECT id, brand, model, year
 		FROM car
 		?
-	`, where)
+		?
+		?
+	`, where, orderBy, limit)
 
 	queryString, params, err := query.ToPgsql()
 	if err != nil {

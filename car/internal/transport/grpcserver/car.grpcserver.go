@@ -75,7 +75,24 @@ func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (
 		year := int(request.GetYear())
 		filter.Year = &year
 	}
-	cars, err := s.application.ListCars(ctx, filter)
+
+	pagination := &model.Pagination{}
+	if request.PageSize <= 0 || request.PageSize > 100 {
+		pagination.PageSize = 20 // Default page size if invalid
+	} else {
+		pagination.PageSize = request.PageSize
+	}
+
+	pageToken := request.GetPageToken()
+	if pageToken != "" {
+		pt, err := uuid.Parse(pageToken)
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, "invalid page token")
+		}
+		pagination.PageToken = pt
+	}
+
+	cars, nextPageToken, err := s.application.ListCars(ctx, filter, pagination)
 	if err != nil {
 		return nil, err
 	}
@@ -91,8 +108,14 @@ func (s *Server) ListCars(ctx context.Context, request *carpb.ListCarsRequest) (
 		})
 	}
 
+	token := ""
+	if nextPageToken != uuid.Nil() {
+		token = nextPageToken.String()
+	}
+
 	return &carpb.ListCarsResponse{
-		Cars: carProtos,
+		Cars:          carProtos,
+		NextPageToken: token,
 	}, nil
 }
 

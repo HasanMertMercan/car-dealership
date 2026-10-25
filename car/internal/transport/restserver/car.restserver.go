@@ -109,7 +109,10 @@ func (h *Handler) ListCars(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	cars, err := h.application.ListCars(r.Context(), filter)
+	cars, nextPageToken, err := h.application.ListCars(r.Context(), filter, &model.Pagination{
+		PageSize:  20,
+		PageToken: uuid.Nil(), // Temporarily using Nil as the page token since pagination is not yet implemented
+	})
 	if err != nil {
 		fmt.Printf("failed to list cars: %v\n", err)
 		http.Error(w, "failed to list cars", http.StatusInternalServerError)
@@ -118,5 +121,11 @@ func (h *Handler) ListCars(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(cars)
+	json.NewEncoder(w).Encode(struct {
+		Cars          []model.Car `json:"cars"`
+		NextPageToken string      `json:"next_page_token"`
+	}{
+		Cars:          cars,
+		NextPageToken: nextPageToken.String(),
+	})
 }

@@ -32,10 +32,13 @@ message UpsertCarResponse {
 message ListCarsRequest{
   optional string search = 1;
   optional int32 year = 2;
+  int32 page_size = 3;
+  string page_token = 4;
 }
 
 message ListCarsResponse {
   repeated Car cars = 1;
+  string next_page_token = 2;
 }
 
 message StreamCarListUpdatesRequest{}

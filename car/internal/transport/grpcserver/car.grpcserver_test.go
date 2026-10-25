@@ -20,15 +20,15 @@ import (
 
 type mockRepository struct {
 	upsertCar func(context.Context, model.Car) error
-	listCars  func(context.Context, *model.CarFilter) ([]model.Car, error)
+	listCars  func(context.Context, *model.CarFilter, *model.Pagination) ([]model.Car, error)
 }
 
 func (m *mockRepository) UpsertCar(ctx context.Context, car model.Car) error {
 	return m.upsertCar(ctx, car)
 }
 
-func (m *mockRepository) ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
-	return m.listCars(ctx, filter)
+func (m *mockRepository) ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
+	return m.listCars(ctx, filter, pagination)
 }
 
 func TestUpsertCar(t *testing.T) {
@@ -41,7 +41,7 @@ func TestUpsertCar(t *testing.T) {
 			storedCar = append(storedCar, car)
 			return nil
 		},
-		listCars: func(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+		listCars: func(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
 			return storedCar, nil
 		},
 	}
@@ -82,7 +82,7 @@ func TestUpsertCar_InvalidIDRejected(t *testing.T) {
 			assert.Fail(t, "UpsertCar should not be called with invalid ID")
 			return nil
 		},
-		listCars: func(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+		listCars: func(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
 			assert.Fail(t, "ListCars should not be called with invalid ID")
 			return storedCar, nil
 		},
@@ -116,7 +116,7 @@ func TestUpsertCar_ValidIDPropagates(t *testing.T) {
 			assert.Equal(t, carID, car.ID.String())
 			return nil
 		},
-		listCars: func(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+		listCars: func(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
 			return storedCar, nil
 		},
 	}
@@ -139,7 +139,7 @@ func TestUpsertCar_ValidIDPropagates(t *testing.T) {
 
 }
 
-func TestListCars(t *testing.T) {
+func TestListCars_Filtering(t *testing.T) {
 	ctx := context.Background()
 	searchText := "BMW"
 	searchYear := int32(2022)
@@ -150,7 +150,7 @@ func TestListCars(t *testing.T) {
 			storedCar = append(storedCar, car)
 			return nil
 		},
-		listCars: func(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
+		listCars: func(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
 			assert.NotNil(t, filter)
 			if filter.Search != nil {
 				assert.NotEmpty(t, *filter.Search)
@@ -176,6 +176,72 @@ func TestListCars(t *testing.T) {
 	assert.NotNil(t, response)
 }
 
+func TestListCars_Pagination(t *testing.T) {
+	ctx := context.Background()
+	var storedCar []model.Car
+	repository := &mockRepository{
+		upsertCar: func(ctx context.Context, car model.Car) error {
+			storedCar = append(storedCar, car)
+			return nil
+		},
+		listCars: func(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error) {
+			assert.NotNil(t, pagination)
+			return storedCar, nil
+		},
+	}
+
+	app := application.NewCarService(repository)
+	mockService := NewServer(app)
+	client := newTestClient(t, mockService)
+
+	cars := []model.Car{
+		{
+			ID:    uuid.NewV4(),
+			Brand: "Toyota",
+			Model: "Corolla",
+			Year:  2022,
+		},
+		{
+			ID:    uuid.NewV4(),
+			Brand: "BMW",
+			Model: "X5",
+			Year:  2022,
+		},
+		{
+			ID:    uuid.NewV4(),
+			Brand: "Audi",
+			Model: "A4",
+			Year:  2022,
+		},
+	}
+	for _, car := range cars {
+		client.UpsertCar(ctx, &carpb.UpsertCarRequest{
+			Id:    car.ID.String(),
+			Brand: car.Brand,
+			Model: car.Model,
+			Year:  int32(car.Year),
+		})
+	}
+
+	response, err := client.ListCars(ctx, &carpb.ListCarsRequest{
+		PageSize:  2,
+		PageToken: "",
+	})
+	require.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, 2, len(response.Cars))
+	assert.NotEmpty(t, response.NextPageToken)
+
+	response, err = client.ListCars(ctx, &carpb.ListCarsRequest{
+		PageSize:  3,
+		PageToken: "",
+	})
+	require.NoError(t, err)
+	assert.NotNil(t, response)
+	assert.Equal(t, 3, len(response.Cars))
+	assert.Empty(t, response.NextPageToken)
+}
+
 // Test helper to create a new gRPC client connected to the test server using an in-memory listener
 // It sets up an in-memory gRPC server and returns a client connected to it.
 func newTestClient(t *testing.T, handler carpb.CarServiceServer) carpb.CarServiceClient {
@@ -190,17 +256,20 @@ func newTestClient(t *testing.T, handler carpb.CarServiceServer) carpb.CarServic
 	)
 	carpb.RegisterCarServiceServer(grpcServer, handler)
 
+	serverErrorChan := make(chan error, 1)
 	// Start the gRPC server in a separate goroutine so it doesn't block the test execution
-	go func() {
-		if err := grpcServer.Serve(listener); err != nil {
-			t.Fatalf("Failed to start gRPC server: %v", err)
-		}
-	}()
+	go func(c chan error) {
+		c <- grpcServer.Serve(listener)
+	}(serverErrorChan)
 
 	// Ensure the gRPC server is stopped and the listener is closed after the test finishes
 	t.Cleanup(func() {
 		grpcServer.Stop()
 		_ = listener.Close()
+
+		if err := <-serverErrorChan; err != nil {
+			t.Fatalf("Failed to start gRPC server: %v", err)
+		}
 	})
 
 	conn, err := grpc.NewClient(
