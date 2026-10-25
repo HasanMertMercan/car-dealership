@@ -12,7 +12,7 @@ import (
 // It is defined within the application layer since this is the Go idiomatic way to define interfaces close to where they are used.
 type CarRepository interface {
 	UpsertCar(ctx context.Context, car model.Car) error
-	ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error)
+	ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error)
 }
 
 // CarService provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
@@ -62,8 +62,11 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 	if err != nil {
 		return nil, err
 	}
-
-	latestCars, err := s.repository.ListCars(ctx, nil)
+	// Will be replaced with more sophisticated streaming logic ------------------
+	latestCars, err := s.repository.ListCars(ctx, nil, &model.Pagination{
+		PageSize:  20,
+		PageToken: uuid.Nil(),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -73,16 +76,26 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 	case s.listUpdate <- latestCars:
 	default:
 	}
+	// --------------------------------------------------------------------------
 
 	return &car, nil
 }
 
-func (s *CarService) ListCars(ctx context.Context, filter *model.CarFilter) ([]model.Car, error) {
-	latestCars, err := s.repository.ListCars(ctx, filter)
+func (s *CarService) ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, uuid.UUID, error) {
+	requestedSize := pagination.PageSize
+	pagination.PageSize = pagination.PageSize + 1
+	latestCars, err := s.repository.ListCars(ctx, filter, pagination)
 	if err != nil {
-		return nil, err
+		return nil, uuid.Nil(), err
 	}
-	return latestCars, nil
+
+	nextPageToken := uuid.Nil()
+	if len(latestCars) > int(requestedSize) {
+		latestCars = latestCars[:requestedSize] // Remove the extra car used to check for the next page
+		nextPageToken = latestCars[len(latestCars)-1].ID
+	}
+
+	return latestCars, nextPageToken, nil
 }
 
 // ListUpdateChannel returns a channel that streams updates to the list of cars in real-time.

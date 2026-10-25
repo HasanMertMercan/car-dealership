@@ -213,6 +213,8 @@ type ListCarsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Search        *string                `protobuf:"bytes,1,opt,name=search,proto3,oneof" json:"search,omitempty"`
 	Year          *int32                 `protobuf:"varint,2,opt,name=year,proto3,oneof" json:"year,omitempty"`
+	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	PageToken     string                 `protobuf:"bytes,4,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -261,9 +263,24 @@ func (x *ListCarsRequest) GetYear() int32 {
 	return 0
 }
 
+func (x *ListCarsRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListCarsRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 type ListCarsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Cars          []*Car                 `protobuf:"bytes,1,rep,name=cars,proto3" json:"cars,omitempty"`
+	NextPageToken string                 `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -303,6 +320,13 @@ func (x *ListCarsResponse) GetCars() []*Car {
 		return x.Cars
 	}
 	return nil
+}
+
+func (x *ListCarsResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type StreamCarListUpdatesRequest struct {
@@ -403,14 +427,18 @@ const file_cars_proto_rawDesc = "" +
 	"\x04year\x18\x04 \x01(\x05R\x04year\"L\n" +
 	"\x11UpsertCarResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x1d\n" +
-	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"[\n" +
+	"\x03car\x18\x02 \x01(\v2\v.car.v1.CarR\x03car\"\x97\x01\n" +
 	"\x0fListCarsRequest\x12\x1b\n" +
 	"\x06search\x18\x01 \x01(\tH\x00R\x06search\x88\x01\x01\x12\x17\n" +
-	"\x04year\x18\x02 \x01(\x05H\x01R\x04year\x88\x01\x01B\t\n" +
+	"\x04year\x18\x02 \x01(\x05H\x01R\x04year\x88\x01\x01\x12\x1b\n" +
+	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x04 \x01(\tR\tpageTokenB\t\n" +
 	"\a_searchB\a\n" +
-	"\x05_year\"3\n" +
+	"\x05_year\"[\n" +
 	"\x10ListCarsResponse\x12\x1f\n" +
-	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars\"\x1d\n" +
+	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"\x1d\n" +
 	"\x1bStreamCarListUpdatesRequest\"?\n" +
 	"\x1cStreamCarListUpdatesResponse\x12\x1f\n" +
 	"\x04cars\x18\x01 \x03(\v2\v.car.v1.CarR\x04cars2\xf2\x01\n" +
