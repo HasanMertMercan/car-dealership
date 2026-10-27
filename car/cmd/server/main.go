@@ -19,11 +19,6 @@ import (
 	"car-dealership/car/internal/transport/restserver"
 )
 
-type carServiceServer struct {
-	carpb.UnimplementedCarServiceServer
-	application *application.CarService
-}
-
 func main() {
 	fmt.Println("Starting Car Service Server...")
 	databaseURL := os.Getenv("CAR_DATABASE_URL")
@@ -51,7 +46,7 @@ func main() {
 	// 1. Initialize the application
 	// carRepository := inmemoryrepository.NewCarRepository(pool) // Legacy in-memory repository for testing
 	carRepository := repository.NewCarRepository(pool)
-	carApplication := application.NewCarService(carRepository)
+	carApplication := application.NewHandler(carRepository)
 
 	// 2.a. Initialize the gRPC server handler with the application instance
 	carGRPCHandler := grpcserver.NewServer(carApplication)

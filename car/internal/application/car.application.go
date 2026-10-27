@@ -15,14 +15,14 @@ type CarRepository interface {
 	ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, error)
 }
 
-// CarService provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
-type CarService struct {
+// CarServiceHandler provides methods to manage cars, including upserting and listing cars, and streaming real-time updates.
+type CarServiceHandler struct {
 	listUpdate chan []model.Car // Channel to stream real-time latest state of the car list
 	repository CarRepository
 }
 
-func NewCarService(repository CarRepository) *CarService {
-	return &CarService{
+func NewHandler(repository CarRepository) *CarServiceHandler {
+	return &CarServiceHandler{
 		listUpdate: make(chan []model.Car, 1),
 		repository: repository,
 	}
@@ -35,7 +35,7 @@ type UpsertCarInput struct {
 	Year  int
 }
 
-func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*model.Car, error) {
+func (s *CarServiceHandler) UpsertCar(ctx context.Context, input UpsertCarInput) (*model.Car, error) {
 	brand := strings.TrimSpace(input.Brand)
 	carModel := strings.TrimSpace(input.Model)
 
@@ -81,7 +81,7 @@ func (s *CarService) UpsertCar(ctx context.Context, input UpsertCarInput) (*mode
 	return &car, nil
 }
 
-func (s *CarService) ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, uuid.UUID, error) {
+func (s *CarServiceHandler) ListCars(ctx context.Context, filter *model.CarFilter, pagination *model.Pagination) ([]model.Car, uuid.UUID, error) {
 	requestedSize := pagination.PageSize
 	pagination.PageSize = pagination.PageSize + 1
 	latestCars, err := s.repository.ListCars(ctx, filter, pagination)
@@ -99,6 +99,6 @@ func (s *CarService) ListCars(ctx context.Context, filter *model.CarFilter, pagi
 }
 
 // ListUpdateChannel returns a channel that streams updates to the list of cars in real-time.
-func (s *CarService) ListUpdateChannel() <-chan []model.Car {
+func (s *CarServiceHandler) ListUpdateChannel() <-chan []model.Car {
 	return s.listUpdate
 }

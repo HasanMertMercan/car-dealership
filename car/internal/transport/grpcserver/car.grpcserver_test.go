@@ -46,7 +46,7 @@ func TestUpsertCar(t *testing.T) {
 		},
 	}
 
-	app := application.NewCarService(repository)
+	app := application.NewHandler(repository)
 	mockService := NewServer(app)
 
 	expectedCar := model.Car{
@@ -88,7 +88,7 @@ func TestUpsertCar_InvalidIDRejected(t *testing.T) {
 		},
 	}
 
-	app := application.NewCarService(repository)
+	app := application.NewHandler(repository)
 	mockService := NewServer(app)
 	client := newTestClient(t, mockService)
 
@@ -121,7 +121,7 @@ func TestUpsertCar_ValidIDPropagates(t *testing.T) {
 		},
 	}
 
-	app := application.NewCarService(repository)
+	app := application.NewHandler(repository)
 	mockService := NewServer(app)
 	client := newTestClient(t, mockService)
 
@@ -164,7 +164,7 @@ func TestListCars_Filtering(t *testing.T) {
 		},
 	}
 
-	app := application.NewCarService(repository)
+	app := application.NewHandler(repository)
 	mockService := NewServer(app)
 	client := newTestClient(t, mockService)
 
@@ -190,7 +190,7 @@ func TestListCars_Pagination(t *testing.T) {
 		},
 	}
 
-	app := application.NewCarService(repository)
+	app := application.NewHandler(repository)
 	mockService := NewServer(app)
 	client := newTestClient(t, mockService)
 

@@ -12,11 +12,11 @@ import (
 
 // Handler is the HTTP handler for the car REST API. It wraps the application layer.
 type Handler struct {
-	application *application.CarService
+	application *application.CarServiceHandler
 }
 
 // NewHandler creates a new instance of the car REST API handler with the given application layer.
-func NewHandler(application *application.CarService) *Handler {
+func NewHandler(application *application.CarServiceHandler) *Handler {
 	return &Handler{
 		application: application,
 	}

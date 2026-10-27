@@ -16,10 +16,10 @@ import (
 
 type Server struct {
 	carpb.UnimplementedCarServiceServer
-	application *application.CarService
+	application *application.CarServiceHandler
 }
 
-func NewServer(application *application.CarService) *Server {
+func NewServer(application *application.CarServiceHandler) *Server {
 	return &Server{
 		application: application,
 	}
